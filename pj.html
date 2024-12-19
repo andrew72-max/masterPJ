@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pikachu Stats Viewer</title>
+  <style>body {
+    font-family: Arial, sans-serif;
+    background-color: #c96969;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #fff;
+    text-shadow: #030f0d 5px 0 0 ;
+    background-color: #73048a;
+    border: #030f0d;
+    border-radius: 20px 0 0 100px;
+
+  }
+  
+  #pikachu-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .pokemon {
+    border: 1px solid #1f0b8d;
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+    background-color: #fff;
+    border-radius: 10px 5px 30px;
+    box-shadow: 0 20px 20px rgba(19, 20, 19, 10);
+  }
+
+  .pokemon img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+    background-color: black;
+  }
+  
+  button {
+    padding: 10px 5px;
+    background-color: #9b0b9b;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 20px 20px rgba(19, 20, 19, 1);
+    
+  }
+  
+  button:hover {
+    background-color: #e71620;
+    border-radius: 20px;
+
+  }
+  
+  #comments-section {
+    margin-top: 50px;
+  }
+  
+  textarea {
+    width: 300px;
+    height: 80px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  #comments-display {
+    margin-top: 20px;
+  }
+  
+  .comment {
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+  }
+  
+  .comment-header {
+    font-weight: bold;
+    margin-bottom: 5p;
+    text-align: left;
+    text-decoration: underline;
+  }
+  
+  .comment-body {
+    font-size: 14px;
+  }
+  #h1{
+    text-decoration: wavy;
+    text-decoration: solid;
+  }
+  #h2{
+    text-decoration: underline;
+    font-style: italic;
+  }
+ 
+  </style>
+</head>
+<body>
+
+  <h1 id="h1">Pikachu Stats Viewer</h1>
+  <h2 id="h2">pikachu information</h2>
+
+  <div id="pikachu-container">
+    <!-- Pokémon information will be displayed here -->
+  </div>
+
+  <div id="comments-section">
+    <h2>Comments</h2>
+    <textarea id="comment-box" placeholder="Write a comment..."></textarea>
+    <button id="comment-btn">Submit Comment</button>
+
+    <div id="comments-display"></div>
+  </div>
+
+  <script>// Function to fetch multiple Pikachu data
+    function fetchMultiplePikachuData() {
+      // IDs of Pikachu for demonstration (including Pikachu ID 25 explicitly)
+      const pokemonIds = [25, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Adding Pikachu (ID 25)
+      
+      pokemonIds.forEach(function(pokemonId) {
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+          .then(function(response) {
+            return response.json(); // Convert the response to JSON
+          })
+          .then(function(data) {
+            // Extracting necessary information
+            const pikachuName = data.name;
+            let pikachuTypes = '';
+            data.types.forEach(function(type, index) {
+              pikachuTypes += type.type.name;
+              if (index < data.types.length - 1) {
+                pikachuTypes += ', ';
+              }
+            });
+    
+            let pikachuAbilities = '';
+            data.abilities.forEach(function(ability, index) {
+              pikachuAbilities += ability.ability.name;
+              if (index < data.abilities.length - 1) {
+                pikachuAbilities += ', ';
+              }
+            });
+    
+            let pikachuStats = '';
+            data.stats.forEach(function(stat, index) {
+              if (stat.stat.name === 'hp') {
+                pikachuStats += `HP: ${stat.base_stat}`;
+              } else if (stat.stat.name === 'attack') {
+                pikachuStats += `, Attack: ${stat.base_stat}`;
+              } else if (stat.stat.name === 'defense') {
+                pikachuStats += `, Defense: ${stat.base_stat}`;
+              } else if (stat.stat.name === 'speed') {
+                pikachuStats += `, Speed: ${stat.base_stat}`;
+              }
+            });
+    
+            const pikachuImage = data.sprites.front_default;
+    
+            // Displaying Pikachu information in a new div
+            const container = document.getElementById("pikachu-container");
+            const pokemonDiv = document.createElement("div");
+            pokemonDiv.classList.add("pokemon");
+    
+            pokemonDiv.innerHTML = `
+              <h3>${pikachuName}</h3>
+              <p>Types: ${pikachuTypes}</p>
+              <p>Abilities: ${pikachuAbilities}</p>
+              <p>${pikachuStats}</p>
+              <img src="${pikachuImage}" alt="${pikachuName}">
+              <button onclick="toggleFavorite('${pikachuName}')">Add to Favorites</button>
+            `;
+    
+            container.appendChild(pokemonDiv);
+          })
+          .catch(function(error) {
+            console.error("Error fetching Pokémon data:", error);
+          });
+      });
+    }
+    
+    // Function to handle submitting comments
+    function submitComment() {
+      const commentBox = document.getElementById("comment-box");
+      const commentText = commentBox.value.trim();
+    
+      if (commentText === "") {
+        alert("Please enter a comment!");
+        return;
+      }
+    
+      // Creating a new comment element
+      const commentDiv = document.createElement("div");
+      commentDiv.classList.add("comment");
+    
+      const commentHeader = document.createElement("div");
+      commentHeader.classList.add("comment-header");
+      commentHeader.textContent = "User " + Math.floor(Math.random() * 100); // Random user number
+    
+      const commentBody = document.createElement("div");
+      commentBody.classList.add("comment-body");
+      commentBody.textContent = commentText;
+    
+      // Appending header and body to the comment div
+      commentDiv.appendChild(commentHeader);
+      commentDiv.appendChild(commentBody);
+    
+      // Adding the comment to the display
+      document.getElementById("comments-display").appendChild(commentDiv);
+    
+      // Clear the input box after submitting
+      commentBox.value = "";
+    }
+    
+    // Function to handle favorite button toggle
+    function toggleFavorite(pokemonName) {
+      alert(pokemonName + " added to favorites!");
+    }
+    
+    // Event Listeners for buttons
+    document.getElementById("comment-btn").addEventListener("click", submitComment);
+    
+    // Fetch Pikachu data when the page loads
+    window.onload = fetchMultiplePikachuData;
+    </script>
+
+</body>
+</html>
+
