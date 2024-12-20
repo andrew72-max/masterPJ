@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pikachu Stats Viewer</title>
-  <style>body {
+  <style>
+  body {
     font-family: Arial, sans-serif;
     background-color: #c96969;
     margin: 0;
     padding: 20px;
     text-align: center;
+    background-image: url("https://images.pexels.com/photos/1097456/pexels-photo-1097456.jpeg?auto=compress&cs=tinysrgb&w=300")
   }
   
   h1 {
@@ -25,6 +27,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    width: auto;
+    height: auto;
   }
   
   .pokemon {
@@ -34,7 +38,7 @@
     width: 200px;
     background-color: #fff;
     border-radius: 10px 5px 30px;
-    box-shadow: 0 20px 20px rgba(19, 20, 19, 10);
+    box-shadow: 0 20px 20px red;
   }
 
   .pokemon img {
@@ -53,7 +57,7 @@
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-    box-shadow: 0 20px 20px rgba(19, 20, 19, 1);
+    box-shadow: 0 20px 20px rgb(5, 17, 5);
     
   }
   
@@ -105,8 +109,18 @@
   #h2{
     text-decoration: underline;
     font-style: italic;
+    color: #fff;
+    background-color: #1f0b8d;
+    border-radius: 20px 0 0 ;
   }
- 
+ #cmmt{
+    text-align: center;
+    text-decoration: underline;
+    background-color: #030f0d;
+    color: #ddd;
+    border-radius: 20px;
+    
+ }
   </style>
 </head>
 <body>
@@ -119,17 +133,18 @@
   </div>
 
   <div id="comments-section">
-    <h2>Comments</h2>
+    <h2 id="cmmt">Comments</h2>
     <textarea id="comment-box" placeholder="Write a comment..."></textarea>
     <button id="comment-btn">Submit Comment</button>
 
     <div id="comments-display"></div>
   </div>
 
-  <script>// Function to fetch multiple Pikachu data
+  <script>
+  // Function to fetch multiple Pikachu data
     function fetchMultiplePikachuData() {
       // IDs of Pikachu for demonstration (including Pikachu ID 25 explicitly)
-      const pokemonIds = [25, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Adding Pikachu (ID 25)
+      const pokemonIds = [25, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; 
       
       pokemonIds.forEach(function(pokemonId) {
         fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
