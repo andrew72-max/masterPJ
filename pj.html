@@ -69,58 +69,41 @@
   #comments-section {
     margin-top: 50px;
   }
-  
-  textarea {
-    width: 300px;
-    height: 80px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
-  
-  #comments-display {
-    margin-top: 20px;
-  }
-  
-  .comment {
-    background-color: #f1f1f1;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-  }
-  
-  .comment-header {
-    font-weight: bold;
-    margin-bottom: 5p;
-    text-align: left;
-    text-decoration: underline;
-  }
-  
-  .comment-body {
-    font-size: 14px;
+
+  /* Styling for Favorites section */
+  #favorites-section {
+    margin-top: 30px;
   }
 
-  #h1 {
-    text-decoration: wavy;
-    text-decoration: solid;
-  }
-
-  #h2 {
-    text-decoration: underline;
-    font-style: italic;
+  #favorites-section h2 {
     color: #fff;
-    background-color: black;
-    border-radius: 20px 0 0 ;
-  }
-  #cmmt {
-    text-align: center;
-    text-decoration: underline;
     background-color: #030f0d;
-    color: #ddd;
-    border-radius: 20px;
+    padding: 10px;
+    border-radius: 10px;
   }
+
+  #favorites-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .favorite-pokemon {
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+    background-color: #fff;
+    border-radius: 10px 5px 30px;
+    box-shadow: 0 20px 20px red;
+  }
+
+  .favorite-pokemon img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+  }
+
   </style>
 </head>
 <body>
@@ -132,6 +115,12 @@
     <!-- Pokémon information will be displayed here -->
   </div>
 
+  <!-- Favorites Section -->
+  <div id="favorites-section">
+    <h2>Your Favorite Pokémon</h2>
+    <div id="favorites-container"></div>
+  </div>
+
   <div id="comments-section">
     <h2 id="cmmt">Comments</h2>
     <textarea id="comment-box" placeholder="Write a comment..."></textarea>
@@ -141,6 +130,8 @@
   </div>
 
   <script>
+  const favorites = []; // Store favorite Pokémon here
+
   // Function to fetch multiple Pikachu data
   function fetchMultiplePikachuData() {
     const pokemonIds = [25, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; 
@@ -193,7 +184,7 @@
             <p>Abilities: ${pikachuAbilities}</p>
             <p>${pikachuStats}</p>
             <img src="${pikachuImage}" alt="${pikachuName}">
-            <button onclick="toggleFavorite('${pikachuName}')">Add to Favorites</button>
+            <button onclick="toggleFavorite('${pikachuName}', '${pikachuImage}')">Add to Favorites</button>
           `;
 
           container.appendChild(pokemonDiv);
@@ -234,8 +225,37 @@
   }
 
   // Function to handle favorite button toggle
-  function toggleFavorite(pokemonName) {
-    alert(pokemonName + " added to favorites!");
+  function toggleFavorite(pokemonName, pokemonImage) {
+    // Check if the Pokémon is already in favorites
+    if (favorites.some(pokemon => pokemon.name === pokemonName)) {
+      alert(pokemonName + " is already in favorites!");
+      return;
+    }
+
+    // Add the Pokémon to favorites
+    const favoritePokemon = { name: pokemonName, image: pokemonImage };
+    favorites.push(favoritePokemon);
+
+    // Update the favorites display
+    renderFavorites();
+  }
+
+  // Function to render favorite Pokémon on the page
+  function renderFavorites() {
+    const favoritesContainer = document.getElementById("favorites-container");
+    favoritesContainer.innerHTML = ""; // Clear existing favorites
+
+    favorites.forEach(function(favorite) {
+      const favoriteDiv = document.createElement("div");
+      favoriteDiv.classList.add("favorite-pokemon");
+
+      favoriteDiv.innerHTML = `
+        <h3>${favorite.name}</h3>
+        <img src="${favorite.image}" alt="${favorite.name}">
+      `;
+
+      favoritesContainer.appendChild(favoriteDiv);
+    });
   }
 
   // Event Listeners
@@ -247,49 +267,7 @@
     fetchMultiplePikachuData();
   });
 
-  // Event listener for changes in the comment box (on 'input' or 'change')
-  document.getElementById("comment-box").addEventListener("input", function() {
-    console.log("User is typing a comment...");
-  });
-
-  // Event listener for the focus and blur events on the comment textarea
-  document.getElementById("comment-box").addEventListener("focus", function() {
-    console.log("Text area focused.");
-  });
-  
-  document.getElementById("comment-box").addEventListener("blur", function() {
-    console.log("Text area blurred.");
-  });
-  
   </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
